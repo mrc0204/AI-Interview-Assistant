@@ -122,20 +122,28 @@ def home():
 
 @app.get("/gemini-test")
 def gemini_test():
-    """Temporary diagnostic: call Gemini directly, bypassing LangChain."""
     from google import genai
 
-    client = genai.Client(api_key=GOOGLE_API_KEY)
-    response = client.models.generate_content(
-        model="models/gemini-2.5-flash",
-        contents="Say hello in one short sentence.",
-    )
+    try:
+        client = genai.Client(api_key=GOOGLE_API_KEY)
 
-    return jsonify({
-        "success": True,
-        "model": "gemini-2.5-flash",
-        "response": response.text,
-    })
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents="Say hello in one short sentence.",
+        )
+
+        return jsonify({
+            "success": True,
+            "model": "gemini-2.5-flash",
+            "response": response.text,
+        })
+
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error_type": type(e).__name__,
+            "error": str(e),
+        }), 500
 
 
 @app.post("/start-interview")
