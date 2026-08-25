@@ -130,3 +130,17 @@ The current implementation stores session metadata and LangGraph checkpoints in 
 **AI Interview Assistant | Python, Flask, LangGraph, Gemini, AssemblyAI, Murf AI**
 
 Built an AI-powered voice interview platform that conducts adaptive five-question interviews using Gemini and LangGraph, dynamically generating follow-up questions based on candidate responses. Integrated AssemblyAI for speech-to-text and Murf AI for text-to-speech, and implemented an automated evaluation pipeline that generates interview scores, strengths, and areas for improvement.
+
+## Vercel Deployment
+
+This repository is configured for Vercel's Python runtime with Flask. The Vercel entrypoint is `api/index.py`, which imports the Flask app from `backend/app.py`.
+
+1. Import the GitHub repository into Vercel.
+2. Keep the project root as the repository root.
+3. Add these Environment Variables in Vercel:
+   - `GOOGLE_API_KEY`
+   - `MURF_API_KEY`
+   - `ASSEMBLYAI_API_KEY`
+4. Deploy. Vercel will install dependencies from `requirements.txt`.
+
+The frontend and API use the same origin, so no frontend API hostname or CORS configuration is required.
