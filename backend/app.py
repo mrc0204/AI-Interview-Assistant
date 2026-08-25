@@ -29,8 +29,7 @@ aai.settings.api_key = ASSEMBLYAI_API_KEY
 # Each request is isolated by its unique thread_id.
 checkpointer = InMemorySaver()
 model = init_chat_model(
-    "gemini-2.5-flash",
-    model_provider="google_genai",
+    "google_genai:gemini-2.5-flash",
     api_key=GOOGLE_API_KEY,
 )
 agent = create_agent(model=model, tools=[], checkpointer=checkpointer)
@@ -121,24 +120,22 @@ def home():
     return send_from_directory(app.static_folder, "index.html")
 
 
-@app.get("/gemini-models")
-def gemini_models():
-    """Temporary diagnostic endpoint: list Gemini models visible to this API key."""
+@app.get("/gemini-test")
+def gemini_test():
+    """Temporary diagnostic: call Gemini directly, bypassing LangChain."""
     from google import genai
 
     client = genai.Client(api_key=GOOGLE_API_KEY)
-    models = []
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents="Say hello in one short sentence.",
+    )
 
-    for model_info in client.models.list():
-        supported = getattr(model_info, "supported_actions", None) or []
-        if "generateContent" in supported:
-            models.append({
-                "name": getattr(model_info, "name", None),
-                "display_name": getattr(model_info, "display_name", None),
-                "supported_actions": list(supported),
-            })
-
-    return jsonify({"success": True, "models": models})
+    return jsonify({
+        "success": True,
+        "model": "gemini-2.5-flash",
+        "response": response.text,
+    })
 
 
 @app.post("/start-interview")
