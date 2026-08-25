@@ -1,7 +1,7 @@
 Flask
 python-dotenv
 langchain
-langchain-google-genai
+langchain-google-genai==4.3.5
 langgraph
 assemblyai
 requests
