@@ -120,6 +120,26 @@ def home():
     return send_from_directory(app.static_folder, "index.html")
 
 
+@app.get("/gemini-models")
+def gemini_models():
+    """Temporary diagnostic endpoint: list Gemini models visible to this API key."""
+    from google import genai
+
+    client = genai.Client(api_key=GOOGLE_API_KEY)
+    models = []
+
+    for model_info in client.models.list():
+        supported = getattr(model_info, "supported_actions", None) or []
+        if "generateContent" in supported:
+            models.append({
+                "name": getattr(model_info, "name", None),
+                "display_name": getattr(model_info, "display_name", None),
+                "supported_actions": list(supported),
+            })
+
+    return jsonify({"success": True, "models": models})
+
+
 @app.post("/start-interview")
 def start_interview():
     data = request.get_json(silent=True) or {}
