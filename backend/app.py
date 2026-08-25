@@ -29,7 +29,7 @@ aai.settings.api_key = ASSEMBLYAI_API_KEY
 # Each request is isolated by its unique thread_id.
 checkpointer = InMemorySaver()
 model = init_chat_model(
-    "google_genai:gemini-2.5-flash",
+    "google_genai:models/gemini-2.5-flash",
     api_key=GOOGLE_API_KEY,
 )
 agent = create_agent(model=model, tools=[], checkpointer=checkpointer)
